@@ -1,0 +1,1178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Athulya Ravi</title>
+<meta name="description" content="Athulya Ravi — software engineer in the making. Full-stack, test automation, applied ML and security.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;500;700;800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<meta property="og:title" content="Athulya Ravi">
+<meta property="og:description" content="Software engineer in the making. Full-stack, test automation, applied ML and security.">
+<meta name="theme-color" content="#05060f">
+<style>html{-webkit-text-size-adjust:100%}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>
+/* Layout: a fixed WebGL particle field behind everything that changes shape per chapter
+   (sphere → knot → helix → galaxy); content floats above it in glass panels on a 1200px track. */
+:root {
+  --void: #05060f;
+  --deep: #0b0e22;
+  --glass: rgba(18, 22, 48, 0.55);
+  --glass-hi: rgba(36, 42, 84, 0.55);
+  --edge: rgba(169, 199, 255, 0.14);
+  --edge-hi: rgba(169, 199, 255, 0.32);
+  --ink: #eef1ff;
+  --muted: #9aa3c7;
+  --dim: #6a7299;
+  --ice: #a9c7ff;
+  --amber: #ffb547;
+  --rose: #ff7a6b;
+  --ok: #5ee6a8;
+  --display: "Unbounded", "Avenir Next", "Segoe UI", sans-serif;
+  --body: "Figtree", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; background: var(--void); }
+body {
+  background: radial-gradient(1200px 800px at 80% -10%, #141a46 0%, transparent 60%),
+              radial-gradient(900px 700px at -10% 110%, #2a1a10 0%, transparent 55%),
+              var(--void);
+  background-attachment: fixed;
+  color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--void); }
+::selection { background: var(--amber); color: var(--void); }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; border-radius: 6px; }
+
+#gl { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; display: block; }
+.grain {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .07; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+.glow {
+  position: fixed; left: 0; top: 0; width: 520px; height: 520px; margin: -260px 0 0 -260px; z-index: 1; pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 181, 71, .10), transparent 60%);
+  transform: translate3d(-999px, -999px, 0); transition: opacity .3s;
+}
+.progress { position: fixed; left: 0; top: env(safe-area-inset-top, 0px); height: 2px; width: 100%; z-index: 70; transform-origin: 0 50%; transform: scaleX(0); background: linear-gradient(90deg, var(--ice), var(--amber)); }
+
+.wrap {
+  position: relative; z-index: 2; max-width: 1240px; margin: 0 auto;
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+}
+
+/* ---------- Nav ---------- */
+.nav {
+  position: fixed; z-index: 50; left: 50%; top: calc(env(safe-area-inset-top, 0px) + 14px); transform: translateX(-50%);
+  display: flex; align-items: center; gap: 6px; padding: 6px;
+  background: rgba(10, 12, 30, .6); border: 1px solid var(--edge); border-radius: 999px;
+  backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%);
+  max-width: calc(100% - 32px);
+}
+.mono-mark {
+  width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; text-decoration: none;
+  font: 800 12px var(--display); letter-spacing: .02em; color: var(--void);
+  background: conic-gradient(from 200deg, var(--ice), var(--amber), var(--rose), var(--ice));
+}
+.nav ul { list-style: none; display: flex; gap: 2px; margin: 0; padding: 0 4px; }
+.nav ul a {
+  display: block; padding: 7px 13px; border-radius: 999px; text-decoration: none;
+  font-size: 14px; font-weight: 500; color: var(--muted); transition: color .2s, background .2s;
+}
+.nav ul a:hover, .nav ul a.on { color: var(--ink); background: rgba(169, 199, 255, .08); }
+.hire {
+  padding: 8px 16px; border-radius: 999px; text-decoration: none; font-weight: 600; font-size: 14px;
+  background: var(--ink); color: var(--void); transition: background .2s;
+}
+.hire:hover { background: var(--amber); }
+
+/* ---------- Hero ---------- */
+.hero { min-height: min(100svh, 980px); display: grid; align-content: center; padding-block: 120px 60px; position: relative; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr); align-items: center; }
+.pill {
+  display: inline-flex; align-items: center; gap: 10px; justify-self: start;
+  font: 500 13px var(--mono); color: var(--muted);
+  padding: 7px 14px 7px 10px; border-radius: 999px; border: 1px solid var(--edge); background: var(--glass);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+.pill i { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); animation: ping 2.2s infinite; }
+@keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(94, 230, 168, .6); } 80%, 100% { box-shadow: 0 0 0 10px rgba(94, 230, 168, 0); } }
+
+.hello { font: 500 14px var(--mono); color: var(--amber); letter-spacing: .18em; text-transform: uppercase; margin: 34px 0 10px; }
+.name {
+  font-family: var(--display); font-weight: 800; margin: 0;
+  font-size: clamp(40px, 11vw, 150px); line-height: .9; letter-spacing: -0.055em;
+}
+.name .line { display: block; overflow: hidden; padding-bottom: .06em; white-space: nowrap; }
+.name .ch { display: inline-block; animation: rise 1s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--i) * 45ms + 150ms); }
+.name .outline { color: transparent; -webkit-text-stroke: 1.5px var(--ice); }
+.name .dot { color: var(--amber); }
+@keyframes rise { from { transform: translateY(105%) rotate(6deg); } to { transform: none; } }
+
+.tagline { margin: 30px 0 0; font-size: clamp(19px, 2.1vw, 24px); line-height: 1.45; color: var(--muted); max-width: 34ch; }
+.tagline b { color: var(--ink); font-weight: 600; }
+.rotor { display: inline-grid; vertical-align: bottom; height: 1.45em; overflow: hidden; color: var(--amber); font-weight: 600; }
+.rotor span { grid-area: 1 / 1; transition: transform .6s cubic-bezier(.7, 0, .2, 1), opacity .6s; }
+.rotor span:not(.on) { transform: translateY(110%); opacity: 0; }
+.rotor span.out { transform: translateY(-110%); opacity: 0; }
+
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 38px; }
+.btn {
+  position: relative; display: inline-flex; align-items: center; gap: 10px; cursor: pointer;
+  padding: 15px 24px; border-radius: 999px; border: 1px solid var(--edge-hi);
+  font: 600 15px var(--body); text-decoration: none; color: var(--ink); background: var(--glass);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  transition: border-color .25s, background .25s, color .25s;
+}
+.btn:hover { border-color: var(--amber); }
+.btn.solid { background: var(--amber); color: #1a1205; border-color: var(--amber); }
+.btn.solid:hover { background: #ffc66e; }
+.btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.hero-side { justify-self: end; display: grid; gap: 14px; text-align: right; font: 400 13px var(--mono); color: var(--dim); }
+.hero-side b { display: block; color: var(--ink); font-weight: 500; font-size: 14px; }
+
+.scrollhint { position: absolute; left: 0; bottom: 26px; display: flex; align-items: center; gap: 12px; font: 400 12px var(--mono); color: var(--dim); letter-spacing: .14em; text-transform: uppercase; }
+.scrollhint span { width: 1px; height: 44px; background: linear-gradient(var(--amber), transparent); animation: drip 2s infinite; transform-origin: top; }
+@keyframes drip { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+
+/* Marquee */
+.marquee { position: relative; z-index: 2; border-block: 1px solid var(--edge); overflow: hidden; background: rgba(5, 6, 15, .45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.marquee .track { display: flex; width: max-content; animation: slide 38s linear infinite; }
+.marquee .set { display: flex; align-items: center; gap: 48px; padding: 22px 24px; }
+.marquee .set span { font: 300 clamp(18px, 2.2vw, 26px) var(--display); letter-spacing: -0.02em; white-space: nowrap; color: var(--muted); }
+.marquee .set i { width: 8px; height: 8px; transform: rotate(45deg); background: var(--amber); flex: none; }
+@keyframes slide { to { transform: translateX(-50%); } }
+
+/* ---------- Sections ---------- */
+section.chapter { padding-block: 140px 40px; position: relative; scroll-margin-top: 60px; }
+.kicker { display: flex; align-items: center; gap: 14px; font: 500 13px var(--mono); color: var(--amber); letter-spacing: .16em; text-transform: uppercase; margin: 0 0 22px; }
+.kicker::before { content: ""; width: 34px; height: 1px; background: var(--amber); }
+.h2 { font-family: var(--display); font-weight: 700; font-size: clamp(36px, 6vw, 84px); line-height: .98; letter-spacing: -0.045em; margin: 0; text-wrap: balance; }
+.h2 em { font-style: normal; color: transparent; -webkit-text-stroke: 1.2px var(--ice); }
+.lead { color: var(--muted); font-size: 19px; max-width: 58ch; margin: 24px 0 0; }
+
+.glass {
+  background: var(--glass); border: 1px solid var(--edge); border-radius: 22px;
+  backdrop-filter: blur(18px) saturate(130%); -webkit-backdrop-filter: blur(18px) saturate(130%);
+}
+
+.reveal { transition: transform 1s cubic-bezier(.2, .8, .2, 1), filter 1s; }
+.reveal.pre { transform: translateY(40px); filter: blur(3px); }
+
+/* About */
+.about-grid { display: grid; grid-template-columns: minmax(0, 1fr); }
+.about-text { font-size: clamp(20px, 2.2vw, 27px); line-height: 1.5; margin: 0; max-width: 34ch; color: var(--muted); text-wrap: pretty; }
+.about-text b { color: var(--ink); font-weight: 600; }
+
+/* Experience */
+.exp-grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 64px; margin-top: 10px; }
+.exp-head { position: sticky; top: 120px; align-self: start; }
+.timeline { position: relative; display: grid; gap: 20px; padding-left: 34px; }
+.timeline::before { content: ""; position: absolute; left: 8px; top: 10px; bottom: 10px; width: 1px; background: var(--edge); }
+.timeline .fill { position: absolute; left: 8px; top: 10px; bottom: 10px; width: 1px; background: linear-gradient(var(--ice), var(--amber)); transform-origin: top; transform: scaleY(0); box-shadow: 0 0 12px var(--amber); }
+.job { position: relative; padding: 26px 28px; transition: border-color .3s, background .3s, transform .3s; }
+.job:hover { border-color: var(--edge-hi); background: var(--glass-hi); }
+.job::before { content: ""; position: absolute; left: -32px; top: 32px; width: 13px; height: 13px; border-radius: 50%; background: var(--void); border: 2px solid var(--ice); }
+.job.feat::before { background: var(--amber); border-color: var(--amber); box-shadow: 0 0 0 5px rgba(255, 181, 71, .18), 0 0 20px var(--amber); }
+.job-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; align-items: baseline; }
+.job h3 { font: 700 21px var(--display); letter-spacing: -0.03em; margin: 0; }
+.when { font: 400 13px var(--mono); color: var(--dim); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.role { color: var(--amber); font-weight: 600; font-size: 15.5px; margin: 4px 0 12px; }
+.job ul { margin: 0; padding-left: 18px; display: grid; gap: 7px; color: var(--muted); font-size: 16px; }
+.job li::marker { color: var(--dim); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+.chip { font: 400 12px var(--mono); color: var(--ice); padding: 4px 10px; border-radius: 999px; border: 1px solid var(--edge); background: rgba(169, 199, 255, .05); }
+.migrate { margin-top: 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 14px 16px; border-radius: 14px; background: rgba(5, 6, 15, .5); border: 1px dashed var(--edge-hi); font: 500 13px var(--mono); }
+.migrate .from { color: var(--dim); text-decoration: line-through; text-decoration-color: var(--rose); }
+.migrate .to { color: var(--ok); }
+.migrate .arrow { color: var(--amber); }
+.migrate .sep { width: 1px; height: 18px; background: var(--edge-hi); margin: 0 6px; }
+
+/* Projects */
+.projects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin-top: 56px; perspective: 1400px; }
+.proj {
+  --rx: 0deg; --ry: 0deg; --mx: 50%; --my: 50%;
+  position: relative; padding: 26px; display: grid; gap: 14px; grid-template-rows: auto auto auto 1fr auto;
+  transform: rotateX(var(--rx)) rotateY(var(--ry)); transform-style: preserve-3d;
+  transition: transform .5s cubic-bezier(.2, .8, .2, 1), border-color .3s; overflow: hidden;
+}
+.proj.live { transition: transform .08s linear, border-color .3s; }
+.proj:hover { border-color: var(--edge-hi); }
+.proj::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; background: radial-gradient(500px circle at var(--mx) var(--my), rgba(255, 181, 71, .12), transparent 45%); opacity: 0; transition: opacity .3s; }
+.proj:hover::after { opacity: 1; }
+.proj-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.idx { font: 400 12.5px var(--mono); color: var(--dim); letter-spacing: .12em; text-transform: uppercase; }
+.proj h3 { font: 800 clamp(28px, 3.2vw, 40px) var(--display); letter-spacing: -0.05em; margin: 0; line-height: 1; }
+.proj p { margin: 0; color: var(--muted); font-size: 16px; }
+.gh { display: inline-flex; align-items: center; gap: 6px; font: 500 13px var(--mono); color: var(--muted); text-decoration: none; }
+.gh:hover { color: var(--amber); }
+.gh svg { width: 15px; height: 15px; fill: currentColor; }
+
+/* Mini previews */
+.preview { transform: translateZ(40px); border-radius: 14px; background: rgba(4, 5, 13, .75); border: 1px solid var(--edge); padding: 14px; font: 400 12.5px/1.65 var(--mono); color: var(--muted); min-height: 150px; position: relative; overflow: hidden; }
+.preview .cap { position: absolute; right: 10px; top: 8px; font-size: 10.5px; color: var(--dim); letter-spacing: .1em; text-transform: uppercase; }
+.dots { display: flex; gap: 6px; margin-bottom: 10px; }
+.dots i { width: 9px; height: 9px; border-radius: 50%; background: #2b3156; }
+.code .k { color: var(--rose); } .code .f { color: var(--ice); } .code .s { color: var(--amber); } .code .c { color: var(--dim); }
+.hintbtn { position: absolute; right: 14px; bottom: 50px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: var(--amber); color: #1a1205; font: 700 12px var(--body); box-shadow: 0 8px 24px rgba(255, 181, 71, .35); animation: bob 3s ease-in-out infinite; }
+.hintpop { position: absolute; right: 14px; bottom: 12px; left: 40%; padding: 7px 10px; border-radius: 10px; background: #1b2147; border: 1px solid var(--edge-hi); color: var(--ink); font: 500 12px var(--body); }
+@keyframes bob { 50% { transform: translateY(-4px); } }
+.term .ok { color: var(--ok); } .term .bad { color: var(--rose); } .term .p { color: var(--amber); }
+.caret { display: inline-block; width: 7px; height: 14px; background: var(--amber); vertical-align: -2px; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.chat { display: grid; gap: 8px; font-family: var(--body); font-size: 13px; }
+.bub { max-width: 82%; padding: 8px 12px; border-radius: 14px; line-height: 1.4; }
+.bub.me { justify-self: end; background: var(--ice); color: #0b0e22; border-bottom-right-radius: 4px; }
+.bub.ai { background: #1b2147; color: var(--ink); border: 1px solid var(--edge); border-bottom-left-radius: 4px; }
+.typing { display: inline-flex; gap: 4px; padding: 10px 12px; background: #1b2147; border-radius: 14px; width: max-content; }
+.typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: tdot 1.2s infinite; }
+.typing i:nth-child(2) { animation-delay: .15s; } .typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes tdot { 0%, 60%, 100% { transform: none; opacity: .4; } 30% { transform: translateY(-4px); opacity: 1; } }
+.bars { display: grid; gap: 12px; font-family: var(--body); font-size: 13px; padding-top: 4px; }
+.bar { display: grid; grid-template-columns: 70px minmax(0, 1fr) 38px; align-items: center; gap: 10px; }
+.bar .t { height: 8px; border-radius: 99px; background: #1b2147; overflow: hidden; }
+.bar .t i { display: block; height: 100%; border-radius: inherit; width: var(--w); }
+.bar span:last-child { text-align: right; font-family: var(--mono); font-size: 12px; font-variant-numeric: tabular-nums; }
+
+/* Skills */
+.skills-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: center; margin-top: 30px; }
+.globe { position: relative; width: min(100%, 520px); aspect-ratio: 1; max-width: 100%; justify-self: center; cursor: grab; touch-action: pan-y; }
+.globe::before { content: ""; position: absolute; inset: 12%; border-radius: 50%; background: radial-gradient(circle at 35% 30%, rgba(169, 199, 255, .14), rgba(255, 181, 71, .05) 50%, transparent 70%); border: 1px solid var(--edge); }
+.globe span {
+  position: absolute; left: 50%; top: 50%; white-space: nowrap; will-change: transform, opacity;
+  font: 600 15px var(--body); color: var(--ink); padding: 4px 10px; border-radius: 999px;
+  background: rgba(11, 14, 34, .7); border: 1px solid var(--edge); user-select: none;
+}
+.globe span.hot { color: var(--amber); border-color: rgba(255, 181, 71, .45); }
+.skill-list { display: grid; gap: 0; }
+.skill-row { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; padding: 15px 0; border-bottom: 1px solid var(--edge); }
+.skill-row:first-child { border-top: 1px solid var(--edge); }
+.skill-row dt { font: 500 12.5px var(--mono); color: var(--amber); letter-spacing: .08em; text-transform: uppercase; padding-top: 3px; }
+.skill-row dd { margin: 0; color: var(--ink); font-size: 16px; }
+
+/* Bento: education + recognition */
+.bento { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; margin-top: 56px; }
+.tile { padding: 28px; display: grid; gap: 8px; align-content: start; position: relative; overflow: hidden; }
+.t-srm { grid-column: span 3; }
+.t-iitm { grid-column: span 3; }
+.t-ach { grid-column: span 4; }
+.t-cert { grid-column: span 2; }
+.tile .lbl { font: 500 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.tile h3 { font: 700 26px var(--display); letter-spacing: -0.04em; margin: 0; }
+.tile .deg { color: var(--muted); }
+.big { font: 800 clamp(64px, 8vw, 110px) var(--display); letter-spacing: -0.06em; line-height: .9; margin-top: 14px; background: linear-gradient(120deg, var(--amber), var(--rose)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.big.iitm { font-size: clamp(40px, 6.4vw, 92px); line-height: .92; letter-spacing: -0.05em; margin: 6px 0 8px; background: linear-gradient(120deg, var(--ice), var(--amber)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.big small { font: 400 16px var(--mono); letter-spacing: 0; color: var(--muted); -webkit-text-fill-color: var(--muted); }
+.course { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+.ach { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 24px; }
+.ach li { display: grid; gap: 2px; padding-left: 16px; border-left: 2px solid var(--amber); }
+.ach b { font-weight: 600; }
+.ach span { color: var(--muted); font-size: 14.5px; }
+.cert { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 12px; }
+.cert li { display: grid; gap: 1px; font-size: 15px; }
+.cert li span { color: var(--muted); font-size: 13.5px; }
+.ring { position: absolute; right: -60px; top: -60px; width: 220px; height: 220px; border-radius: 50%; border: 1px solid var(--edge); }
+.ring::after { content: ""; position: absolute; inset: 30px; border-radius: 50%; border: 1px dashed var(--edge-hi); animation: spin 40s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Contact */
+.contact { padding-block: 180px 80px; text-align: center; display: grid; justify-items: center; gap: 28px; }
+.contact .h2 { font-size: clamp(32px, 8.5vw, 128px); max-width: 12ch; }
+.contact .h2 .grad { background: linear-gradient(100deg, var(--ice), var(--amber) 55%, var(--rose)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.contact .lead { margin: 0 auto; }
+.mail {
+  display: inline-flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 18px;
+  padding: 12px 12px 12px 26px; border-radius: 999px; max-width: 100%;
+}
+.mail span { font: 500 clamp(14px, 2vw, 19px) var(--mono); user-select: all; overflow-wrap: anywhere; }
+.magnet { transition: transform .25s cubic-bezier(.2, .8, .2, 1); }
+.socials { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.toast { position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 24px); transform: translate(-50%, 20px); opacity: 0; z-index: 80; padding: 10px 18px; border-radius: 999px; background: var(--ink); color: var(--void); font-weight: 600; font-size: 14px; transition: .3s; pointer-events: none; }
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+footer { position: relative; z-index: 2; border-top: 1px solid var(--edge); }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; padding-block: 26px calc(26px + env(safe-area-inset-bottom, 0px)); font: 400 13px var(--mono); color: var(--dim); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1020px) {
+  .nav ul { display: none; }
+  .hero-grid, .about-grid, .exp-grid, .skills-grid { grid-template-columns: minmax(0, 1fr); }
+  .hero-side { justify-self: start; text-align: left; grid-auto-flow: column; gap: 28px; margin-top: 44px; }
+  .exp-head { position: static; }
+  .exp-grid { gap: 36px; }
+  .t-ach, .t-cert { grid-column: span 6; }
+}
+@media (max-width: 680px) {
+  body { font-size: 16px; }
+  .hero { padding-block: 110px 90px; }
+  .hero-side { grid-auto-flow: row; }
+  section.chapter { padding-block: 100px 20px; }
+  .projects { grid-template-columns: minmax(0, 1fr); }
+  .t-srm, .t-iitm { grid-column: span 6; }
+  .ach { grid-template-columns: minmax(0, 1fr); }
+  .skill-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .timeline { padding-left: 26px; }
+  .job { padding: 22px 20px; }
+  .job::before { left: -24px; }
+  .glow { display: none; }
+  .contact { padding-block: 120px 60px; }
+  .mail { padding: 14px 18px; border-radius: 22px; }
+}
+@media (pointer: coarse) { .glow { display: none; } }
+@media (max-width: 1020px) {
+  .hero { min-height: auto; padding-block: 130px 90px; }
+  .hero-side { flex-wrap: wrap; }
+}
+@media (max-width: 680px) {
+  .hero-side { gap: 14px; margin-top: 36px; }
+  .tagline { max-width: none; }
+  .actions .btn { flex: 1 1 auto; justify-content: center; }
+  .globe span { font-size: 13px; padding: 3px 8px; }
+  .filters { gap: 6px; }
+  .filters button { padding: 6px 11px; font-size: 12px; }
+  .job-top { flex-direction: column; gap: 2px; }
+  .proj { padding: 20px; }
+  .tile { padding: 22px; }
+  .h2 { font-size: clamp(30px, 9vw, 44px); }
+  .lead { font-size: 17px; }
+  .marquee .set { gap: 28px; padding: 16px 14px; }
+}
+@media (max-width: 380px) {
+  .nav ul { display: none; }
+  .hire { padding: 8px 12px; font-size: 13px; }
+  .bar { grid-template-columns: 58px minmax(0, 1fr) 34px; gap: 6px; }
+  .term-in label { display: none; }
+  .mail span { font-size: 13px; }
+}
+@media (max-height: 520px) and (orientation: landscape) {
+  .hero { min-height: auto; padding-block: 100px 60px; }
+  .scrollhint { display: none; }
+}
+
+/* ---------- v2: boot intro ---------- */
+.boot {
+  position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; background: var(--void);
+  padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px));
+  transition: opacity .7s ease, visibility .7s; cursor: pointer;
+}
+.boot.done { opacity: 0; visibility: hidden; }
+.boot-box { width: min(460px, 100%); font: 400 14px/1.9 var(--mono); color: var(--muted); }
+.boot-box .ln { opacity: 0; transform: translateY(6px); transition: .3s; display: flex; justify-content: space-between; gap: 12px; }
+.boot-box .ln.on { opacity: 1; transform: none; }
+.boot-box .ok { color: var(--ok); }
+.boot-box .cmd { color: var(--ink); }
+.boot-box .cmd b { color: var(--amber); font-weight: 500; }
+.boot-bar { height: 2px; margin-top: 16px; background: var(--edge); overflow: hidden; border-radius: 2px; }
+.boot-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--ice), var(--amber)); transition: width 1.5s cubic-bezier(.4, 0, .2, 1); }
+.boot-skip { margin-top: 14px; font-size: 11.5px; color: var(--dim); letter-spacing: .1em; text-transform: uppercase; }
+body.booting .name .ch { animation-play-state: paused; }
+
+/* ---------- v2: cursor ring ---------- */
+.ring-cursor {
+  position: fixed; left: 0; top: 0; width: 34px; height: 34px; margin: -17px 0 0 -17px; z-index: 150; pointer-events: none;
+  border: 1.5px solid var(--amber); border-radius: 50%; opacity: 0; transition: width .25s, height .25s, margin .25s, opacity .3s, background .25s;
+}
+.ring-cursor.on { opacity: .8; }
+.ring-cursor.big { width: 64px; height: 64px; margin: -32px 0 0 -32px; background: rgba(255, 181, 71, .08); }
+.hero-tip { margin-top: 26px; font: 400 12.5px var(--mono); color: var(--dim); display: flex; align-items: center; gap: 10px; }
+.hero-tip kbd { font: inherit; color: var(--ice); padding: 2px 8px; border: 1px solid var(--edge-hi); border-radius: 6px; }
+@media (pointer: coarse) { .ring-cursor, .hero-tip { display: none; } }
+
+/* ---------- v2: commit headers on experience ---------- */
+.commit { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-bottom: 14px; font: 400 12.5px var(--mono); color: var(--dim); }
+.commit .br { color: var(--void); background: var(--ice); padding: 1px 8px; border-radius: 6px; font-weight: 500; }
+.job.feat .commit .br { background: var(--amber); }
+.commit .msg { color: var(--ok); }
+
+/* ---------- v2: skill filters ---------- */
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 36px; }
+.filters button {
+  font: 500 13px var(--mono); color: var(--muted); background: var(--glass); cursor: pointer;
+  border: 1px solid var(--edge); border-radius: 999px; padding: 7px 14px; transition: .2s;
+}
+.filters button:hover { color: var(--ink); border-color: var(--edge-hi); }
+.filters button[aria-pressed="true"] { color: #1a1205; background: var(--amber); border-color: var(--amber); }
+.skill-row { transition: opacity .3s; }
+.skill-row.dim { opacity: .3; }
+
+/* ---------- v2: terminal ---------- */
+.term-wrap { margin-top: 48px; overflow: hidden; border-radius: 18px; }
+.term-head { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--edge); font: 400 12.5px var(--mono); color: var(--dim); }
+.term-head i { width: 11px; height: 11px; border-radius: 50%; background: #2b3156; }
+.term-head i:nth-child(1) { background: var(--rose); } .term-head i:nth-child(2) { background: var(--amber); } .term-head i:nth-child(3) { background: var(--ok); }
+.term-head span { margin-left: 8px; }
+.term-out { height: 360px; overflow-y: auto; padding: 18px 20px 6px; font: 400 14px/1.7 var(--mono); color: var(--muted); }
+.term-out .u { color: var(--ink); }
+.term-out .u b { color: var(--amber); font-weight: 500; }
+.term-out .h { color: var(--ice); }
+.term-out .g { color: var(--ok); }
+.term-out .r { color: var(--rose); }
+.term-out a { color: var(--amber); }
+.term-out pre { margin: 0 0 12px; font: inherit; white-space: pre-wrap; overflow-wrap: anywhere; }
+.term-in { display: flex; align-items: center; gap: 10px; padding: 12px 20px 16px; font: 400 14px var(--mono); }
+.term-in label { color: var(--amber); white-space: nowrap; }
+@media (max-width: 680px) { .term-in label .long { display: none; } }
+.term-in input { flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; color: var(--ink); font: inherit; caret-color: var(--amber); }
+.term-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 20px 18px; }
+.term-chips button { font: 400 12px var(--mono); color: var(--ice); background: rgba(169, 199, 255, .06); border: 1px solid var(--edge); border-radius: 999px; padding: 4px 11px; cursor: pointer; }
+.term-chips button:hover { border-color: var(--amber); color: var(--amber); }
+@media (max-width: 680px) { .term-out { height: 320px; font-size: 13px; padding: 14px; } .term-in { padding: 10px 14px 14px; } .term-chips { padding: 0 14px 14px; } }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .reveal.pre { transform: none; filter: none; }
+}
+</style>
+</head>
+<body>
+<div class="boot" id="boot" aria-hidden="true">
+  <div class="boot-box">
+    <div class="ln cmd"><span>$ npm run deploy <b>athulya-ravi</b></span></div>
+    <div class="ln"><span>lint</span><span class="ok">✓ passed</span></div>
+    <div class="ln"><span>test · playwright</span><span class="ok">✓ passed</span></div>
+    <div class="ln"><span>build</span><span class="ok">✓ passed</span></div>
+    <div class="ln"><span>deploy → portfolio</span><span class="ok">✓ live</span></div>
+    <div class="boot-bar"><i id="bootbar"></i></div>
+    <div class="boot-skip">Click to skip</div>
+  </div>
+</div>
+<div class="ring-cursor" id="ring" aria-hidden="true"></div>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="glow" id="glow" aria-hidden="true"></div>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<nav class="nav" aria-label="Main">
+  <a class="mono-mark" href="#top" aria-label="Back to top">AR</a>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#terminal">Terminal</a></li>
+  </ul>
+  <a class="hire" href="#contact">Hire me</a>
+</nav>
+
+<header class="hero wrap" id="top" data-shape="0">
+  <div class="hero-grid">
+    <div>
+      <span class="pill"><i></i>Open to SDE internships · 2027</span>
+      <p class="hello">Hi, I'm</p>
+      <h1 class="name" aria-label="Athulya Ravi">
+        <span class="line" aria-hidden="true" data-split="Athulya"></span>
+        <span class="line outline" aria-hidden="true" data-split="Ravi" data-dot="."></span>
+      </h1>
+      <p class="tagline">A Computer Science student who
+        <span class="rotor" id="rotor"><span class="on">builds full-stack apps</span><span>automates testing</span><span>ships CI/CD pipelines</span><span>trains ML models</span><span>hunts SQL injections</span></span>,
+        and makes sure it <b>all passes in CI</b>.</p>
+      <div class="actions">
+        <a class="btn solid magnet" href="#projects">See my work
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <button class="btn magnet" type="button" id="copy-hero">
+          <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Copy email</button>
+      </div>
+      <p class="hero-tip"><kbd>click</kbd> anywhere to send a shockwave through the particles</p>
+    </div>
+    <div class="hero-side">
+      <div><b>Fidelity Investments</b>Most recent · SWE Intern</div>
+      <div><b>SRM × IIT Madras</b>CS + Data Science</div>
+      <div><b>Chennai, India</b>IST · UTC+5:30</div>
+    </div>
+  </div>
+  <div class="scrollhint" aria-hidden="true"><span></span>Scroll</div>
+</header>
+
+<div class="marquee" aria-label="Organisations I've worked or studied with">
+  <div class="track">
+    <div class="set"><span>Fidelity Investments</span><i></i><span>Amazon ML School</span><i></i><span>Supraja Technologies</span><i></i><span>MIT Square, London</span><i></i><span>IIT Madras</span><i></i><span>SRM University</span><i></i><span>GeeksforGeeks</span><i></i></div>
+    <div class="set" aria-hidden="true"><span>Fidelity Investments</span><i></i><span>Amazon ML School</span><i></i><span>Supraja Technologies</span><i></i><span>MIT Square, London</span><i></i><span>IIT Madras</span><i></i><span>SRM University</span><i></i><span>GeeksforGeeks</span><i></i></div>
+  </div>
+</div>
+
+<main>
+  <section class="chapter wrap" id="about" data-shape="0">
+    <p class="kicker">About</p>
+    <div class="about-grid">
+      <div>
+        <h2 class="h2 reveal">Code that's <em>tested</em>, systems that <em>scale</em>.</h2>
+        <p class="about-text reveal" style="margin-top:28px">I study <b>Computer Science at SRM</b> and <b>Data Science at IIT Madras</b>. I've modernised test infrastructure at <b>Fidelity</b>, automated vulnerability detection in security work, published research on disaster management, and trained at <b>Amazon ML School</b>. I care about clean code and things that keep working after they ship.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter wrap" id="experience" data-shape="1">
+    <div class="exp-grid">
+      <div class="exp-head">
+        <p class="kicker">Experience</p>
+        <h2 class="h2">Where I've <em>shipped</em>.</h2>
+        <p class="lead">From enterprise CI/CD to web security and published research.</p>
+      </div>
+      <div class="timeline" id="timeline">
+        <div class="fill" id="tfill" aria-hidden="true"></div>
+
+        <article class="job glass feat reveal">
+          <div class="commit"><span class="br">feat/fidelity</span><span class="msg">migrate e2e suite to playwright</span><span>· merged</span></div>
+          <div class="job-top"><h3>Fidelity Investments</h3><span class="when">May – Jul 2026</span></div>
+          <p class="role">Software Engineering Intern</p>
+          <ul>
+            <li>Migrated the end-to-end test suites of a baseline Angular application from Cypress to Playwright, modernising the testing infrastructure.</li>
+            <li>Integrated Jenkins and SonarQube into the CI/CD pipeline to automate builds and add continuous code-quality analysis.</li>
+          </ul>
+          <div class="migrate" aria-label="Migrated Cypress to Playwright; added Jenkins and SonarQube">
+            <span class="from">cypress</span><span class="arrow">→</span><span class="to">playwright</span>
+            <span class="sep"></span>
+            <span class="to">+ jenkins</span><span class="to">+ sonarqube</span>
+          </div>
+          <div class="chips"><span class="chip">Angular</span><span class="chip">Playwright</span><span class="chip">Jenkins</span><span class="chip">SonarQube</span><span class="chip">CI/CD</span></div>
+        </article>
+
+        <article class="job glass reveal">
+          <div class="commit"><span class="br">ml/amazon-ml-school</span><span class="msg">selected from 60,000+</span><span>· merged</span></div>
+          <div class="job-top"><h3>Amazon</h3><span class="when">Aug – Sep 2025</span></div>
+          <p class="role">ML Trainee · Amazon ML School 2025</p>
+          <ul><li>Selected from more than 60,000 applicants for Amazon's competitive machine learning training programme.</li></ul>
+          <div class="chips"><span class="chip">Machine Learning</span><span class="chip">Remote</span></div>
+        </article>
+
+        <article class="job glass reveal">
+          <div class="commit"><span class="br">sec/supraja</span><span class="msg">automate sqli detection</span><span>· merged</span></div>
+          <div class="job-top"><h3>Supraja Technologies</h3><span class="when">May – Jun 2025</span></div>
+          <p class="role">Cybersecurity Intern</p>
+          <ul>
+            <li>Identified input-based vulnerabilities in web applications.</li>
+            <li>Automated the detection of SQL injection flaws.</li>
+          </ul>
+          <div class="chips"><span class="chip">Web security</span><span class="chip">SQL injection</span><span class="chip">Automation</span></div>
+        </article>
+
+        <article class="job glass reveal">
+          <div class="commit"><span class="br">research/mit-square</span><span class="msg">publish disaster-management paper</span><span>· merged</span></div>
+          <div class="job-top"><h3>MIT Square, London</h3><span class="when">Aug 2024 – May 2025</span></div>
+          <p class="role">Research Intern</p>
+          <ul>
+            <li>Authored a published research paper on a Smart Disaster Management System.</li>
+            <li>Collaborated with the Federal University of Santa Maria, Brazil.</li>
+          </ul>
+          <div class="chips"><span class="chip">Research</span><span class="chip">Publication</span><span class="chip">Remote</span></div>
+        </article>
+
+        <article class="job glass reveal">
+          <div class="commit"><span class="br">community/gfg</span><span class="msg">run fests &amp; workshops</span><span>· ongoing</span></div>
+          <div class="job-top"><h3>GeeksforGeeks Chapter, SRMIST</h3><span class="when">Oct 2024 – Now</span></div>
+          <p class="role">PR &amp; Socials Head · Technical Core Member</p>
+          <ul>
+            <li>Organise and lead technical fests, workshops and coding events on campus.</li>
+            <li>Compete on GeeksforGeeks, LeetCode and CodeChef.</li>
+          </ul>
+          <div class="chips"><span class="chip">Leadership</span><span class="chip">Community</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter wrap" id="projects" data-shape="2">
+    <p class="kicker">Selected projects</p>
+    <h2 class="h2 reveal">Things I've <em>built</em>.</h2>
+    <div class="projects">
+      <article class="proj glass tilt">
+        <div class="proj-top"><span class="idx">Chrome extension · AI</span>
+          <a class="gh" href="https://github.com/athulyaravi11" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.170 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>Code</a></div>
+        <div class="preview code" aria-hidden="true">
+          <span class="cap">preview</span>
+          <div class="dots"><i></i><i></i><i></i></div>
+          <div><span class="k">def</span> <span class="f">twoSum</span>(nums, target):</div>
+          <div>&nbsp;&nbsp;<span class="c"># stuck? ask for a nudge</span></div>
+          <div>&nbsp;&nbsp;<span class="k">for</span> i, n <span class="k">in</span> <span class="f">enumerate</span>(nums):</div>
+          <span class="hintbtn">✦ Hint</span>
+          <div class="hintpop">Try storing what you've seen in a hash map.</div>
+        </div>
+        <h3>AlgoAid</h3>
+        <p>Injects a floating Hint button into coding platforms like LeetCode. Hints come from a custom backend running Groq's LLaMA 3, so you get unstuck without seeing the answer.</p>
+        <div class="chips"><span class="chip">Chrome Extension</span><span class="chip">Node.js</span><span class="chip">Express</span><span class="chip">LLaMA 3</span></div>
+      </article>
+
+      <article class="proj glass tilt">
+        <div class="proj-top"><span class="idx">Security tool</span>
+          <a class="gh" href="https://github.com/athulyaravi11" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>Code</a></div>
+        <div class="preview term" aria-hidden="true">
+          <span class="cap">sample run</span>
+          <div class="dots"><i></i><i></i><i></i></div>
+          <div><span class="p">$</span> safeform scan /login</div>
+          <div>→ field <span class="f">username</span> · payload <span class="p">' OR '1'='1</span></div>
+          <div>→ response: <span class="bad">SQL syntax error</span></div>
+          <div><span class="bad">✗ vulnerable</span> · <span class="ok">✓ 3 fields safe</span></div>
+          <div><span class="p">$</span> <span class="caret"></span></div>
+        </div>
+        <h3>SafeForm</h3>
+        <p>Scans websites for SQL injection vulnerabilities by firing common payloads at input forms and analysing the error responses.</p>
+        <div class="chips"><span class="chip">Python</span><span class="chip">Flask</span><span class="chip">Security</span></div>
+      </article>
+
+      <article class="proj glass tilt">
+        <div class="proj-top"><span class="idx">Web app · AI</span>
+          <a class="gh" href="https://github.com/athulyaravi11" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>Code</a></div>
+        <div class="preview" aria-hidden="true">
+          <span class="cap">sample chat</span>
+          <div class="chat">
+            <div class="bub me">I like data and design. What careers fit me?</div>
+            <div class="bub ai">You could explore UX research, data visualisation or product analytics. Want a roadmap?</div>
+            <div class="typing"><i></i><i></i><i></i></div>
+          </div>
+        </div>
+        <h3>Pathfindr</h3>
+        <p>An AI career-counselling website with a Python backend and a chatbot powered by the Gemini API that helps students explore their options.</p>
+        <div class="chips"><span class="chip">Flask</span><span class="chip">Gemini API</span><span class="chip">JavaScript</span></div>
+      </article>
+
+      <article class="proj glass tilt">
+        <div class="proj-top"><span class="idx">Desktop app · NLP</span>
+          <a class="gh" href="https://github.com/athulyaravi11" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>Code</a></div>
+        <div class="preview" aria-hidden="true">
+          <span class="cap">sample output</span>
+          <div class="dots"><i></i><i></i><i></i></div>
+          <div style="color:var(--ink);font-family:var(--body);font-size:13px;margin-bottom:12px">"The demo went better than I expected!"</div>
+          <div class="bars">
+            <div class="bar"><span>Positive</span><span class="t"><i style="--w:78%;background:var(--ok)"></i></span><span>78%</span></div>
+            <div class="bar"><span>Neutral</span><span class="t"><i style="--w:17%;background:var(--ice)"></i></span><span>17%</span></div>
+            <div class="bar"><span>Negative</span><span class="t"><i style="--w:5%;background:var(--rose)"></i></span><span>5%</span></div>
+          </div>
+        </div>
+        <h3>Sentiview</h3>
+        <p>A desktop app that analyses sentiment from typed text, files or speech, with clear visual breakdowns of the results.</p>
+        <div class="chips"><span class="chip">Java</span><span class="chip">Python</span><span class="chip">Speech input</span></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="chapter wrap" id="skills" data-shape="2">
+    <p class="kicker">Toolkit</p>
+    <h2 class="h2 reveal">My <em>stack</em>, in orbit.</h2>
+    <div class="filters" id="filters" role="group" aria-label="Filter skills">
+      <button type="button" data-cat="all" aria-pressed="true">All</button>
+      <button type="button" data-cat="lang" aria-pressed="false">Languages</button>
+      <button type="button" data-cat="web" aria-pressed="false">Web</button>
+      <button type="button" data-cat="ml" aria-pressed="false">ML &amp; AI</button>
+      <button type="button" data-cat="test" aria-pressed="false">Testing</button>
+      <button type="button" data-cat="devops" aria-pressed="false">DevOps</button>
+      <button type="button" data-cat="tools" aria-pressed="false">Tools</button>
+    </div>
+    <div class="skills-grid">
+      <div class="globe" id="globe" aria-hidden="true"></div>
+      <dl class="skill-list">
+        <div class="skill-row" data-cat="lang"><dt>Languages</dt><dd>Python, Java, C/C++, JavaScript, SQL, HTML, CSS</dd></div>
+        <div class="skill-row" data-cat="web"><dt>Web</dt><dd>MongoDB, Express.js, React, Node.js, Angular, Flask, Bootstrap</dd></div>
+        <div class="skill-row" data-cat="ml"><dt>ML &amp; AI</dt><dd>Machine learning, LLM integration (Groq LLaMA 3, Gemini API), sentiment analysis</dd></div>
+        <div class="skill-row" data-cat="test"><dt>Testing</dt><dd>Playwright, Cypress, SonarQube</dd></div>
+        <div class="skill-row" data-cat="devops"><dt>DevOps</dt><dd>Jenkins, GitHub Actions, Git</dd></div>
+        <div class="skill-row" data-cat="tools"><dt>Tools</dt><dd>VS Code, Figma, Power BI</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="chapter wrap" id="education" data-shape="2">
+    <p class="kicker">Education &amp; recognition</p>
+    <h2 class="h2 reveal">Two degrees, <em>one</em> direction.</h2>
+    <div class="bento">
+      <div class="tile glass t-srm reveal">
+        <span class="ring" aria-hidden="true"></span>
+        <span class="lbl">2023 – 2027 · Chennai</span>
+        <h3>SRM University</h3>
+        <span class="deg">B.Tech, Computer Science Engineering</span>
+        <div class="big">9.84<small> / 10</small></div>
+        <div class="course"><span class="chip">Data Structures</span><span class="chip">Operating Systems</span><span class="chip">OOP</span><span class="chip">RDBMS</span><span class="chip">Full-Stack</span><span class="chip">ML</span></div>
+      </div>
+      <div class="tile glass t-iitm reveal">
+        <span class="lbl">In progress · Chennai</span>
+        <div class="big iitm">IIT<br>MADRAS</div>
+        <span class="deg" style="font-weight:600;color:var(--ink)">BS Degree in Data Science</span>
+        <span class="deg">Studied alongside the B.Tech, adding statistics, data and ML depth.</span>
+      </div>
+      <div class="tile glass t-ach reveal">
+        <span class="lbl">Achievements</span>
+        <ul class="ach">
+          <li><b>Best Speaker, Youth Parliament</b><span>Delhi Zone · Ministry of Parliamentary Affairs, Govt. of India</span></li>
+          <li><b>SRMJEE Merit Scholarship</b><span>For performance in the SRM entrance examination</span></li>
+          <li><b>Performance-Based Scholarship</b><span>For consistent academic excellence at SRM</span></li>
+          <li><b>Head Girl</b><span>Kerala Sr. Secondary School, Vikaspuri, New Delhi</span></li>
+        </ul>
+      </div>
+      <div class="tile glass t-cert reveal">
+        <span class="lbl">Certifications</span>
+        <ul class="cert">
+          <li>NPTEL: DBMS, Cloud, Intro to ML<span>IIT Kharagpur</span></li>
+          <li>AICTE Google AI-ML Internship<span>Google Developers</span></li>
+          <li>Full Stack Developer Bootcamp<span>GeeksforGeeks</span></li>
+          <li>Python, Java, SQL<span>HackerRank</span></li>
+          <li>Power BI Workshop<span>OfficeMaster</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter wrap" id="terminal" data-shape="2">
+    <p class="kicker">Terminal</p>
+    <h2 class="h2 reveal">Prefer the <em>command line</em>?</h2>
+    <p class="lead">Explore my profile the way an engineer would. Type a command or tap one below.</p>
+    <div class="term-wrap glass">
+      <div class="term-head"><i></i><i></i><i></i><span>athulya@portfolio: ~</span></div>
+      <div class="term-out" id="tout" aria-live="polite"></div>
+      <form class="term-in" id="tform" autocomplete="off">
+        <label for="tin"><span class="long">athulya@portfolio:</span>~$</label>
+        <input id="tin" name="tin" type="text" spellcheck="false" autocapitalize="off" placeholder="type help" aria-label="Terminal command">
+      </form>
+      <div class="term-chips" id="tchips">
+        <button type="button">whoami</button><button type="button">experience</button><button type="button">projects</button><button type="button">skills</button><button type="button">education</button><button type="button">contact</button><button type="button">sudo hire athulya</button><button type="button">clear</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact wrap" id="contact" data-shape="3">
+    <p class="kicker">Contact</p>
+    <h2 class="h2">Let's build something <span class="grad">remarkable.</span></h2>
+    <p class="lead">I'm looking for Software Development Engineer internships. If you're hiring or have a project in mind, I'd love to hear from you.</p>
+    <div class="mail glass">
+      <span id="email">athulyaravi2004work@gmail.com</span>
+      <button class="btn solid magnet" type="button" id="copy-contact">Copy email</button>
+    </div>
+    <div class="socials">
+      <a class="btn magnet" href="https://linkedin.com/in/athulyaravi" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a class="btn magnet" href="https://github.com/athulyaravi11" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap"><span>© 2026 Athulya Ravi</span><span>Chennai, India</span></div></footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine = window.matchMedia('(pointer: fine)').matches;
+  var EMAIL = 'athulyaravi2004work@gmail.com';
+
+  /* ---------- Split hero name into letters ---------- */
+  var idx = 0;
+  document.querySelectorAll('[data-split]').forEach(function (line) {
+    var txt = line.getAttribute('data-split');
+    for (var i = 0; i < txt.length; i++) {
+      var s = document.createElement('span'); s.className = 'ch'; s.style.setProperty('--i', idx++); s.textContent = txt[i]; line.appendChild(s);
+    }
+    if (line.dataset.dot) { var d = document.createElement('span'); d.className = 'ch dot'; d.style.setProperty('--i', idx++); d.textContent = line.dataset.dot; line.appendChild(d); }
+  });
+
+  /* ---------- Fit the name so "Athulya" always stays on one line ---------- */
+  var nameEl = document.querySelector('.name');
+  function fitName() {
+    nameEl.style.fontSize = '';
+    var lines = nameEl.querySelectorAll('.line'), avail = nameEl.clientWidth, widest = 0;
+    lines.forEach(function (l) { var rg = document.createRange(); rg.selectNodeContents(l); widest = Math.max(widest, rg.getBoundingClientRect().width); });
+    if (!widest || !avail) return;
+    var cur = parseFloat(getComputedStyle(nameEl).fontSize);
+    var next = Math.min(180, cur * (avail * 0.98) / widest);
+    nameEl.style.fontSize = next.toFixed(1) + 'px';
+  }
+  fitName();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitName);
+  addEventListener('resize', fitName);
+
+  /* ---------- Rotating word ---------- */
+  var rotor = document.getElementById('rotor');
+  if (rotor && !reduce) {
+    var words = rotor.children, cur = 0;
+    setInterval(function () {
+      var prev = words[cur]; cur = (cur + 1) % words.length;
+      prev.classList.remove('on'); prev.classList.add('out');
+      words[cur].classList.remove('out'); words[cur].classList.add('on');
+      setTimeout(function () { prev.classList.remove('out'); }, 650);
+    }, 2400);
+  }
+
+  /* ---------- Copy email ---------- */
+  var toast = document.getElementById('toast'), tt;
+  function say(msg) { toast.textContent = msg; toast.classList.add('on'); clearTimeout(tt); tt = setTimeout(function () { toast.classList.remove('on'); }, 1800); }
+  function copy() {
+    var fallback = function () {
+      var el = document.getElementById('email'); var r = document.createRange(); r.selectNodeContents(el);
+      var s = getSelection(); s.removeAllRanges(); s.addRange(r); el.scrollIntoView({ block: 'center' });
+      say('Email selected. Press Ctrl+C to copy');
+    };
+    try { navigator.clipboard.writeText(EMAIL).then(function () { say('Email copied'); }, fallback); } catch (e) { fallback(); }
+  }
+  document.getElementById('copy-hero').addEventListener('click', copy);
+  document.getElementById('copy-contact').addEventListener('click', copy);
+
+  /* ---------- Reveal (transform only; content always visible) ---------- */
+  var reveals = document.querySelectorAll('.reveal');
+  if (!reduce && 'IntersectionObserver' in window) {
+    reveals.forEach(function (el) { if (el.getBoundingClientRect().top > innerHeight) el.classList.add('pre'); });
+    var ro = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.remove('pre'); ro.unobserve(e.target); } }); }, { rootMargin: '0px 0px -8% 0px' });
+    reveals.forEach(function (el) { ro.observe(el); });
+  }
+
+  /* ---------- Nav active state ---------- */
+  var navLinks = document.querySelectorAll('.nav ul a'), byId = {};
+  navLinks.forEach(function (a) { byId[a.getAttribute('href').slice(1)] = a; });
+  if ('IntersectionObserver' in window) {
+    var no = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { navLinks.forEach(function (a) { a.classList.remove('on'); }); if (byId[e.target.id]) byId[e.target.id].classList.add('on'); } });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    document.querySelectorAll('section[id]').forEach(function (s) { no.observe(s); });
+  }
+
+  /* ---------- Cursor glow + magnetic buttons + tilt ---------- */
+  var mouse = { x: innerWidth / 2, y: innerHeight / 2, nx: 0, ny: 0, active: false };
+  var glow = document.getElementById('glow');
+  addEventListener('pointermove', function (e) {
+    mouse.x = e.clientX; mouse.y = e.clientY; mouse.active = true;
+    mouse.nx = e.clientX / innerWidth * 2 - 1; mouse.ny = -(e.clientY / innerHeight * 2 - 1);
+    if (fine && !reduce) glow.style.transform = 'translate3d(' + e.clientX + 'px,' + e.clientY + 'px,0)';
+  }, { passive: true });
+  document.addEventListener('pointerleave', function () { mouse.active = false; });
+
+  if (fine && !reduce) {
+    document.querySelectorAll('.magnet').forEach(function (b) {
+      b.addEventListener('pointermove', function (e) {
+        var r = b.getBoundingClientRect();
+        b.style.transform = 'translate(' + ((e.clientX - r.left - r.width / 2) * .25) + 'px,' + ((e.clientY - r.top - r.height / 2) * .35) + 'px)';
+      });
+      b.addEventListener('pointerleave', function () { b.style.transform = ''; });
+    });
+    document.querySelectorAll('.tilt').forEach(function (c) {
+      c.addEventListener('pointermove', function (e) {
+        var r = c.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+        c.classList.add('live');
+        c.style.setProperty('--ry', ((px - .5) * 10).toFixed(2) + 'deg');
+        c.style.setProperty('--rx', ((.5 - py) * 10).toFixed(2) + 'deg');
+        c.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
+        c.style.setProperty('--my', (py * 100).toFixed(1) + '%');
+      });
+      c.addEventListener('pointerleave', function () { c.classList.remove('live'); c.style.setProperty('--rx', '0deg'); c.style.setProperty('--ry', '0deg'); });
+    });
+  }
+
+  /* ---------- Scroll: progress bar + timeline fill ---------- */
+  var prog = document.getElementById('progress'), tl = document.getElementById('timeline'), tfill = document.getElementById('tfill');
+  function onScroll() {
+    var max = document.documentElement.scrollHeight - innerHeight;
+    prog.style.transform = 'scaleX(' + (max > 0 ? scrollY / max : 0) + ')';
+    var r = tl.getBoundingClientRect(), p = (innerHeight * .6 - r.top) / r.height;
+    tfill.style.transform = 'scaleY(' + Math.max(0, Math.min(1, p)) + ')';
+  }
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  /* ---------- 3D skills globe ---------- */
+  var globe = document.getElementById('globe');
+  var skills = [['Python','lang'],['Java','lang'],['C++','lang'],['JavaScript','lang'],['SQL','lang'],['HTML','lang'],['CSS','lang'],
+    ['React','web'],['Node.js','web'],['Express','web'],['MongoDB','web'],['Angular','web'],['Flask','web'],['Bootstrap','web'],
+    ['Playwright','test'],['Cypress','test'],['SonarQube','test'],['Jenkins','devops'],['GitHub Actions','devops'],['Git','devops'],
+    ['LLaMA 3','ml'],['Gemini API','ml'],['Machine Learning','ml'],['Sentiment Analysis','ml'],['LLM Integration','ml'],
+    ['Figma','tools'],['Power BI','tools'],['VS Code','tools']];
+  var nodes = skills.map(function (s, i) {
+    var el = document.createElement('span'); el.textContent = s[0]; globe.appendChild(el);
+    var y = 1 - (i + .5) / skills.length * 2, rr = Math.sqrt(1 - y * y), th = i * 2.399963;
+    return { el: el, cat: s[1], dim: false, x: Math.cos(th) * rr, y: y, z: Math.sin(th) * rr };
+  });
+  var rows = document.querySelectorAll('.skill-row');
+  document.querySelectorAll('#filters button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var cat = b.dataset.cat;
+      document.querySelectorAll('#filters button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      nodes.forEach(function (n) { n.dim = cat !== 'all' && n.cat !== cat; n.el.classList.toggle('hot', cat !== 'all' && n.cat === cat); });
+      rows.forEach(function (r) { r.classList.toggle('dim', cat !== 'all' && r.dataset.cat !== cat); });
+      vy += 0.02; drawGlobe();
+    });
+  });
+  var ax = -0.25, ay = 0, vx = 0.0016, vy = 0.004, drag = null, gVisible = true;
+  function drawGlobe() {
+    var R = globe.clientWidth * .42, cx = Math.cos(ax), sx = Math.sin(ax), cy = Math.cos(ay), sy = Math.sin(ay);
+    for (var i = 0; i < nodes.length; i++) {
+      var n = nodes[i];
+      var x1 = n.x * cy + n.z * sy, z1 = -n.x * sy + n.z * cy;
+      var y2 = n.y * cx - z1 * sx, z2 = n.y * sx + z1 * cx;
+      var k = (z2 + 2.2) / 3.2;
+      n.el.style.transform = 'translate(-50%,-50%) translate3d(' + (x1 * R).toFixed(1) + 'px,' + (-y2 * R).toFixed(1) + 'px,0) scale(' + (0.55 + k * 0.6).toFixed(3) + ')';
+      n.el.style.opacity = ((0.2 + 0.8 * (z2 + 1) / 2) * (n.dim ? 0.15 : 1)).toFixed(3);
+      n.el.style.zIndex = Math.round((z2 + 1) * 50);
+    }
+  }
+  globe.addEventListener('pointerdown', function (e) { drag = { x: e.clientX, y: e.clientY }; globe.setPointerCapture(e.pointerId); globe.style.cursor = 'grabbing'; });
+  globe.addEventListener('pointermove', function (e) {
+    if (drag) { vy = (e.clientX - drag.x) * .0009; vx = -(e.clientY - drag.y) * .0009; drag = { x: e.clientX, y: e.clientY }; }
+    else if (fine) { var r = globe.getBoundingClientRect(); vy = ((e.clientX - r.left) / r.width - .5) * .02; vx = -((e.clientY - r.top) / r.height - .5) * .02; }
+  });
+  globe.addEventListener('pointerup', function () { drag = null; globe.style.cursor = ''; });
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { gVisible = es[0].isIntersecting; }).observe(globe);
+  drawGlobe();
+
+  /* ---------- WebGL particle field ---------- */
+  var gl3 = null;
+  try { if (window.THREE) gl3 = setupParticles(); } catch (e) { gl3 = null; }
+
+  function setupParticles() {
+    var canvas = document.getElementById('gl');
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: false, powerPreference: 'high-performance' });
+    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+    renderer.setSize(innerWidth, innerHeight, false);
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 100);
+    camera.position.set(0, 0, 7.5);
+
+    var small = innerWidth < 700;
+    var N = small ? 4200 : 9000;
+    var P = [new Float32Array(N * 3), new Float32Array(N * 3), new Float32Array(N * 3), new Float32Array(N * 3)];
+    var rnd = new Float32Array(N);
+    function gauss() { return (Math.random() + Math.random() + Math.random() - 1.5) / 1.5; }
+    for (var i = 0; i < N; i++) {
+      var o = i * 3; rnd[i] = Math.random();
+      // 0: sphere shell with a faint inner core
+      var y = 1 - (i + .5) / N * 2, r = Math.sqrt(1 - y * y), th = i * 2.399963;
+      var R = i % 9 === 0 ? 2.3 * Math.cbrt(Math.random()) : 2.3 * (0.97 + Math.random() * .06);
+      P[0][o] = Math.cos(th) * r * R; P[0][o + 1] = y * R; P[0][o + 2] = Math.sin(th) * r * R;
+      // 1: (2,3) torus knot with tube thickness
+      var t = Math.random() * Math.PI * 2, kr = Math.cos(3 * t) + 2.1;
+      var tx = kr * Math.cos(2 * t), ty = kr * Math.sin(2 * t), tz = -Math.sin(3 * t) * 1.1;
+      var j = 0.22 * Math.pow(Math.random(), .6), a1 = Math.random() * 6.283, a2 = Math.acos(2 * Math.random() - 1);
+      P[1][o] = tx * .78 + j * Math.sin(a2) * Math.cos(a1); P[1][o + 1] = ty * .78 + j * Math.sin(a2) * Math.sin(a1); P[1][o + 2] = tz * .78 + j * Math.cos(a2);
+      // 2: double helix with rungs
+      var u = Math.random(), hy = (u - .5) * 7.2, ang = u * Math.PI * 6;
+      if (i % 6 === 0) {
+        var step = Math.round(u * 36) / 36, hy2 = (step - .5) * 7.2, an2 = step * Math.PI * 6, f = Math.random() * 2 - 1;
+        P[2][o] = Math.cos(an2) * 1.05 * f; P[2][o + 1] = hy2; P[2][o + 2] = Math.sin(an2) * 1.05 * f;
+      } else {
+        var side = i % 2 ? Math.PI : 0;
+        P[2][o] = Math.cos(ang + side) * 1.05 + gauss() * .07; P[2][o + 1] = hy + gauss() * .05; P[2][o + 2] = Math.sin(ang + side) * 1.05 + gauss() * .07;
+      }
+      // 3: four-arm spiral galaxy
+      var arm = i % 4, gr = Math.pow(Math.random(), 1.7) * 3.8 + .08, ga = arm * Math.PI / 2 + gr * 1.25 + gauss() * .32 / (gr * .5 + .5);
+      P[3][o] = Math.cos(ga) * gr + gauss() * .1; P[3][o + 1] = gauss() * .22 * (1.2 - gr / 3.8); P[3][o + 2] = Math.sin(ga) * gr + gauss() * .1;
+    }
+    var geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(P[0].slice(), 3));
+    geo.setAttribute('p0', new THREE.BufferAttribute(P[0], 3));
+    geo.setAttribute('p1', new THREE.BufferAttribute(P[1], 3));
+    geo.setAttribute('p2', new THREE.BufferAttribute(P[2], 3));
+    geo.setAttribute('p3', new THREE.BufferAttribute(P[3], 3));
+    geo.setAttribute('aR', new THREE.BufferAttribute(rnd, 1));
+
+    var uniforms = {
+      uMorph: { value: 0 }, uTime: { value: 0 }, uPix: { value: renderer.getPixelRatio() },
+      uSize: { value: small ? 34 : 30 }, uOpacity: { value: 1 }, uMouse: { value: new THREE.Vector2(99, 99) }, uHover: { value: 0 }, uPulse: { value: 0 }, uPulseAt: { value: new THREE.Vector2(0, 0) },
+      cIce: { value: new THREE.Color('#a9c7ff') }, cAmber: { value: new THREE.Color('#ffb547') }, cRose: { value: new THREE.Color('#ff7a6b') }
+    };
+    var mat = new THREE.ShaderMaterial({
+      uniforms: uniforms, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+      vertexShader: [
+        'attribute vec3 p0; attribute vec3 p1; attribute vec3 p2; attribute vec3 p3; attribute float aR;',
+        'uniform float uMorph, uTime, uPix, uSize, uHover, uPulse; uniform vec2 uMouse, uPulseAt;',
+        'varying float vR; varying float vFade;',
+        'void main(){',
+        '  float m = uMorph;',
+        '  float d = aR * 0.35;',
+        '  vec3 a = mix(p0, p1, smoothstep(0.0, 1.0, clamp(m * 1.35 - d, 0.0, 1.0)));',
+        '  vec3 b = mix(a, p2, smoothstep(0.0, 1.0, clamp((m - 1.0) * 1.35 - d, 0.0, 1.0)));',
+        '  vec3 c = mix(b, p3, smoothstep(0.0, 1.0, clamp((m - 2.0) * 1.35 - d, 0.0, 1.0)));',
+        '  c += 0.05 * vec3(sin(uTime * 0.7 + aR * 40.0 + c.y * 1.7), cos(uTime * 0.6 + aR * 30.0 + c.x * 1.3), sin(uTime * 0.5 + aR * 20.0));',
+        '  vec4 world = modelMatrix * vec4(c, 1.0);',
+        '  vec2 dir = world.xy - uMouse; float dist = length(dir);',
+        '  world.xy += normalize(dir + 1e-4) * uHover * 0.9 * exp(-dist * dist * 1.6);',
+        '  vec2 pdir = world.xy - uPulseAt; float pd = length(pdir); float front = (1.0 - uPulse) * 7.0;',
+        '  float wave = uPulse * exp(-(pd - front) * (pd - front) * 2.5);',
+        '  world.xy += normalize(pdir + 1e-4) * wave * 0.7; world.z += wave * 0.6;',
+        '  vec4 mv = viewMatrix * world;',
+        '  gl_Position = projectionMatrix * mv;',
+        '  gl_PointSize = uSize * uPix * (0.35 + aR * 0.9) / -mv.z;',
+        '  vR = aR; vFade = smoothstep(14.0, 4.0, -mv.z);',
+        '}'
+      ].join('\n'),
+      fragmentShader: [
+        'uniform vec3 cIce, cAmber, cRose; uniform float uOpacity;',
+        'varying float vR; varying float vFade;',
+        'void main(){',
+        '  vec2 q = gl_PointCoord - 0.5; float r = length(q);',
+        '  float a = smoothstep(0.5, 0.0, r); a *= a;',
+        '  vec3 col = cIce;',
+        '  if (vR > 0.86) col = mix(cAmber, cRose, smoothstep(0.86, 1.0, vR) * 0.5);',
+        '  gl_FragColor = vec4(col, a * uOpacity * (0.35 + 0.65 * vFade));',
+        '}'
+      ].join('\n')
+    });
+    var points = new THREE.Points(geo, mat);
+    var group = new THREE.Group(); group.add(points); scene.add(group);
+
+    // Faint background star dust
+    var SD = small ? 500 : 1200, sp = new Float32Array(SD * 3);
+    for (var s = 0; s < SD; s++) { sp[s * 3] = (Math.random() - .5) * 40; sp[s * 3 + 1] = (Math.random() - .5) * 26; sp[s * 3 + 2] = -6 - Math.random() * 14; }
+    var sg = new THREE.BufferGeometry(); sg.setAttribute('position', new THREE.BufferAttribute(sp, 3));
+    var stars = new THREE.Points(sg, new THREE.PointsMaterial({ color: 0x8fa6e6, size: 0.035, transparent: true, opacity: 0.55, depthWrite: false }));
+    scene.add(stars);
+
+    var sections = Array.prototype.slice.call(document.querySelectorAll('[data-shape]'));
+    var state = { morph: 0, x: 0, y: 0, scale: 1, op: 1 };
+    function targets() {
+      var mid = scrollY + innerHeight * .5, shape = 0;
+      for (var k = 0; k < sections.length; k++) {
+        var el = sections[k], top = el.offsetTop, h = el.offsetHeight, cur = +el.dataset.shape;
+        if (mid >= top) {
+          shape = cur;
+          var next = sections[k + 1];
+          if (next && mid < top + h) { var t = (mid - top) / h; shape = cur + Math.max(0, Math.min(1, (t - .55) / .45)) * (+next.dataset.shape - cur); }
+        }
+      }
+      var heroPart = Math.max(0, 1 - scrollY / (innerHeight * .8));
+      var wide = innerWidth > 1020, end = shape > 2.5;
+      return {
+        morph: shape,
+        x: wide ? 2.7 * heroPart + (end ? 0 : (1 - heroPart) * 1.6) : 0,
+        y: wide ? 0 : 1.3 * heroPart + (1 - heroPart) * 0.2,
+        scale: wide ? 1 : (0.78 * heroPart + 0.85 * (1 - heroPart)),
+        op: end ? 1 : 0.55 + 0.45 * heroPart
+      };
+    }
+
+    var clock = new THREE.Clock(), rotY = 0, rotX = 0, hover = 0, pulse = 0;
+    addEventListener('pointerdown', function (e) {
+      if (reduce || e.target.closest('a, button, input, .globe, .term-wrap, .proj')) return;
+      var vh = 2 * Math.tan(25 * Math.PI / 180) * camera.position.z, vw = vh * camera.aspect;
+      uniforms.uPulseAt.value.set((e.clientX / innerWidth * 2 - 1) * vw / 2, -(e.clientY / innerHeight * 2 - 1) * vh / 2);
+      pulse = 1; uniforms.uPulse.value = 1;
+    });
+    function frame() {
+      var dt = Math.min(clock.getDelta(), 0.05), T = targets(), k = reduce ? 1 : 1 - Math.pow(0.0015, dt);
+      state.morph += (T.morph - state.morph) * k; state.x += (T.x - state.x) * k; state.y += (T.y - state.y) * k;
+      state.scale += (T.scale - state.scale) * k; state.op += (T.op - state.op) * k;
+      if (!reduce) { uniforms.uTime.value += dt; rotY += dt * (state.morph > 2.5 ? 0.07 : 0.12); }
+      var tiltX = state.morph > 2.5 ? 0.95 : 0.15;
+      rotX += ((tiltX + mouse.ny * 0.18) - rotX) * k;
+      group.rotation.set(rotX, rotY + mouse.nx * 0.35, state.morph > 0.5 && state.morph < 1.5 ? Math.sin(uniforms.uTime.value * .2) * .2 : 0);
+      group.position.set(state.x, state.y, 0); group.scale.setScalar(state.scale);
+      uniforms.uMorph.value = state.morph; uniforms.uOpacity.value = state.op;
+      var vh = 2 * Math.tan(25 * Math.PI / 180) * camera.position.z, vw = vh * camera.aspect;
+      uniforms.uMouse.value.set(mouse.nx * vw / 2, mouse.ny * vh / 2);
+      hover += ((mouse.active && fine && !reduce ? 1 : 0) - hover) * k; uniforms.uHover.value = hover;
+      if (pulse > 0) { pulse = Math.max(0, pulse - dt * 0.75); uniforms.uPulse.value = pulse; }
+      stars.rotation.y = rotY * 0.05;
+      camera.position.x += (mouse.nx * 0.3 - camera.position.x) * k * .5; camera.position.y += (mouse.ny * 0.2 - camera.position.y) * k * .5;
+      camera.lookAt(0, 0, 0);
+      renderer.render(scene, camera);
+      if (!reduce && gVisible) { if (!drag) { vx *= .985; vy *= .985; if (Math.abs(vy) < .003) vy += .0001; } ax += vx; ay += vy; ax = Math.max(-1.2, Math.min(1.2, ax)); drawGlobe(); }
+      requestAnimationFrame(frame);
+    }
+    addEventListener('resize', function () {
+      camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth, innerHeight, false); drawGlobe();
+    });
+    requestAnimationFrame(frame);
+    return true;
+  }
+
+  // Without WebGL, still spin the globe
+  if (!gl3 && !reduce) (function spin() { if (gVisible) { if (!drag) { vx *= .985; vy *= .985; if (Math.abs(vy) < .003) vy += .0001; } ax += vx; ay += vy; ax = Math.max(-1.2, Math.min(1.2, ax)); drawGlobe(); } requestAnimationFrame(spin); })();
+  addEventListener('resize', drawGlobe);
+
+  /* ---------- v2: boot intro ---------- */
+  var boot = document.getElementById('boot'), seen = false;
+  try { seen = sessionStorage.getItem('ar-boot') === '1'; } catch (e) {}
+  function endBoot() { boot.classList.add('done'); document.body.classList.remove('booting'); try { sessionStorage.setItem('ar-boot', '1'); } catch (e) {} }
+  if (reduce || seen) { boot.classList.add('done'); }
+  else {
+    document.body.classList.add('booting');
+    var lns = boot.querySelectorAll('.ln');
+    lns.forEach(function (l, i) { setTimeout(function () { l.classList.add('on'); }, 120 + i * 280); });
+    setTimeout(function () { document.getElementById('bootbar').style.width = '100%'; }, 60);
+    var bt = setTimeout(endBoot, 1900);
+    boot.addEventListener('click', function () { clearTimeout(bt); endBoot(); });
+  }
+
+  /* ---------- v2: cursor ring ---------- */
+  var ring = document.getElementById('ring');
+  if (fine && !reduce) {
+    var rx = innerWidth / 2, ry = innerHeight / 2;
+    (function follow() {
+      rx += (mouse.x - rx) * .2; ry += (mouse.y - ry) * .2;
+      ring.style.transform = 'translate3d(' + rx.toFixed(1) + 'px,' + ry.toFixed(1) + 'px,0)';
+      requestAnimationFrame(follow);
+    })();
+    addEventListener('pointermove', function (e) {
+      ring.classList.add('on');
+      ring.classList.toggle('big', !!e.target.closest('a, button, .proj, .globe, input'));
+    }, { passive: true });
+    document.addEventListener('pointerleave', function () { ring.classList.remove('on'); });
+  }
+
+  /* ---------- v2: scramble kickers once when they enter ---------- */
+  if (!reduce && 'IntersectionObserver' in window) {
+    var glyphs = '!<>-_/[]{}=+*^?#01';
+    var so = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return; so.unobserve(e.target);
+        var el = e.target, final = el.textContent, f = 0, total = 18;
+        (function step() {
+          var out = '';
+          for (var i = 0; i < final.length; i++) out += (i < final.length * f / total || final[i] === ' ') ? final[i] : glyphs[Math.floor(Math.random() * glyphs.length)];
+          el.textContent = out; if (++f <= total) requestAnimationFrame(step); else el.textContent = final;
+        })();
+      });
+    }, { rootMargin: '0px 0px -10% 0px' });
+    document.querySelectorAll('section .kicker').forEach(function (k) { so.observe(k); });
+  }
+
+  /* ---------- v2: terminal ---------- */
+  var tout = document.getElementById('tout'), tin = document.getElementById('tin'), hist = [], hi = 0;
+  var esc = function (t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;'); };
+  var CMDS = {
+    help: function () { return '<span class="h">Available commands</span>\n  whoami       who I am\n  experience   where I have worked\n  projects     things I have built\n  skills       my stack\n  education    degrees and scores\n  awards       awards & certificates\n  contact      how to reach me\n  github       open my GitHub\n  linkedin     open my LinkedIn\n  clear        clear the screen'; },
+    whoami: function () { return '<span class="g">Athulya Ravi</span> · CS undergrad at SRM University + BS Data Science at IIT Madras.\nI build full-stack apps, automate tests and wire up CI/CD.\nOpen to SDE internships.'; },
+    experience: function () { return '<span class="h">2026</span>  Fidelity Investments   SWE Intern · Cypress → Playwright, Jenkins + SonarQube\n<span class="h">2025</span>  Amazon                 ML Trainee · Amazon ML School (60,000+ applicants)\n<span class="h">2025</span>  Supraja Technologies   Cybersecurity Intern · automated SQLi detection\n<span class="h">2024</span>  MIT Square, London     Research Intern · published disaster-management paper\n<span class="h">now </span>  GfG Chapter, SRMIST    PR &amp; Socials Head · Technical Core'; },
+    projects: function () { return '<span class="g">AlgoAid</span>     Chrome extension · AI hints on LeetCode via Groq LLaMA 3\n<span class="g">SafeForm</span>    Python/Flask · scans forms for SQL injection\n<span class="g">Pathfindr</span>   Flask + Gemini · AI career counselling chatbot\n<span class="g">Sentiview</span>   Java + Python · sentiment from text, files or speech'; },
+    skills: function () { return '<span class="h">languages</span>  Python, Java, C/C++, JavaScript, SQL\n<span class="h">web</span>        React, Node.js, Express, MongoDB, Angular, Flask\n<span class="h">ml</span>         LLaMA 3, Gemini API, sentiment analysis\n<span class="h">testing</span>    Playwright, Cypress, SonarQube\n<span class="h">devops</span>     Jenkins, GitHub Actions, Git'; },
+    education: function () { return '<span class="g">SRM University</span>   B.Tech CSE · 2023–2027 · CGPA 9.84/10\n<span class="g">IIT Madras</span>       BS Data Science · in progress'; },
+    awards: function () { return '• Best Speaker, Youth Parliament (Delhi Zone)\n• SRMJEE Merit Scholarship\n• Performance-Based Scholarship, SRM\n• NPTEL (IIT Kharagpur) · AICTE Google AI-ML · GfG Full Stack Bootcamp'; },
+    contact: function () { return 'email     <span class="g">' + EMAIL + '</span>\nlinkedin  <a href="https://linkedin.com/in/athulyaravi" target="_blank" rel="noopener">linkedin.com/in/athulyaravi</a>\ngithub    <a href="https://github.com/athulyaravi11" target="_blank" rel="noopener">github.com/athulyaravi11</a>'; },
+    github: function () { return 'Opening <a href="https://github.com/athulyaravi11" target="_blank" rel="noopener">github.com/athulyaravi11</a> (click if it did not open)'; },
+    linkedin: function () { return 'Opening <a href="https://linkedin.com/in/athulyaravi" target="_blank" rel="noopener">linkedin.com/in/athulyaravi</a> (click if it did not open)'; }
+  };
+  CMDS.ls = CMDS.help; CMDS.about = CMDS.whoami;
+  function print(cmd, html) {
+    var pre = document.createElement('pre');
+    pre.innerHTML = (cmd !== null ? '<span class="u"><b>~$</b> ' + esc(cmd) + '</span>\n' : '') + html;
+    tout.appendChild(pre); tout.scrollTop = tout.scrollHeight;
+  }
+  function run(raw) {
+    var cmd = raw.trim(), key = cmd.toLowerCase();
+    if (!cmd) return;
+    hist.push(cmd); hi = hist.length;
+    if (key === 'clear') { tout.innerHTML = ''; return; }
+    if (key.indexOf('sudo') === 0) {
+      if (key.indexOf('hire') > -1) { print(cmd, '<span class="g">[sudo] permission granted.</span>\nGreat choice. Reach me at <span class="g">' + EMAIL + '</span>'); return; }
+      print(cmd, '<span class="r">Nice try.</span> This incident will be reported to the recruiter.'); return;
+    }
+    if (CMDS[key]) {
+      print(cmd, CMDS[key]());
+      if (key === 'github' || key === 'linkedin') { var a = tout.querySelector('pre:last-child a'); if (a) a.click(); }
+      return;
+    }
+    print(cmd, '<span class="r">command not found:</span> ' + esc(cmd) + '. Type <span class="h">help</span> to see what I can do.');
+  }
+  print('help', CMDS.help());
+  document.getElementById('tform').addEventListener('submit', function (e) { e.preventDefault(); run(tin.value); tin.value = ''; });
+  tin.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowUp' && hi > 0) { tin.value = hist[--hi]; e.preventDefault(); }
+    else if (e.key === 'ArrowDown') { hi = Math.min(hist.length, hi + 1); tin.value = hist[hi] || ''; e.preventDefault(); }
+    else if (e.key === 'Tab') { var m = Object.keys(CMDS).filter(function (c) { return c.indexOf(tin.value.toLowerCase()) === 0; }); if (m.length === 1) { tin.value = m[0]; e.preventDefault(); } }
+  });
+  document.querySelectorAll('#tchips button').forEach(function (b) { b.addEventListener('click', function () { run(b.textContent); }); });
+  document.querySelector('.term-out').addEventListener('click', function (e) { if (!e.target.closest('a')) tin.focus({ preventScroll: true }); });
+})();
+</script>
+</body>
+</html>
